@@ -1,0 +1,100 @@
+<div class="container py-5">
+  <div class="card shadow mx-auto" style="max-width: 900px; border-radius: 1rem;">
+
+    <!-- Header de Card -->
+    <div class="card-header text-center bg-light text-primary fw-bold fs-4 border-0">
+      Subir Excel
+    </div>
+
+    <div class="card-body">
+
+      <!-- Toggle mostrar/eliminados -->
+      <div class="text-center mb-4">
+        <button class="btn btn-outline-primary toggle-btn" (click)="toggleShowDeleted()">
+          {{ showDeleted ? '🔹 Mostrar solo activos' : '🗑️ Mostrar eliminados' }}
+        </button>
+      </div>
+
+      <!-- Selección de archivo -->
+      <div class="d-flex justify-content-center mb-3">
+        <label class="btn btn-success d-flex align-items-center gap-2 file-label" for="fileInput">
+          <i class="fas fa-file-excel"></i> Seleccionar archivo
+        </label>
+        <input type="file" id="fileInput" class="d-none" (change)="onFileSelected($event)" />
+      </div>
+
+      <!-- Nombre archivo -->
+      <div class="text-center mb-3">
+        <span class="file-name fst-italic" [ngClass]="{'text-danger fw-bold': !selectedFile}">
+          {{ selectedFile?.name || 'Sin archivos seleccionados' }}
+        </span>
+      </div>
+
+      <!-- Botones subir/borrar -->
+      <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+        <button class="btn btn-primary d-flex align-items-center gap-2" (click)="onUpload()">
+          <i class="fas fa-upload"></i> Subir
+        </button>
+        <button *ngIf="selectedFile" class="btn btn-danger d-flex align-items-center gap-2" (click)="selectedFile=null">
+          <i class="fas fa-trash-alt"></i> Borrar
+        </button>
+      </div>
+
+      <!-- Barra de progreso -->
+
+      <div *ngIf="progress >= 0" class="progress mb-3" [@fadeOut]>
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" [style.width.%]="progress">
+          {{progress}}%
+        </div>
+      </div>
+
+
+      <p class="text-center text-success">{{message}}</p>
+
+      <!-- Tabla de Excel -->
+      <div *ngIf="excelData.length > 0" class="table-responsive mt-4">
+        <h5 class="mb-3 text-secondary">Contenido de Excel</h5>
+        <table class="table table-bordered table-hover align-middle">
+          <tbody>
+            <ng-container *ngFor="let group of excelData">
+
+              <!-- Header de archivo -->
+              <tr *ngIf="group.isHeader" class="table-light">
+                <td [attr.colspan]="group.colspan" class="text-center fw-bold">
+
+                  <!-- Nombre del archivo siempre visible -->
+                  {{ group.file_name }}
+
+                  <!-- Mostrar toggle y borrar solo si el archivo NO está eliminado -->
+                  <span *ngIf="!group.is_deleted && !showDeleted" (click)="toggleFile(group.file_name)"
+                    style="cursor:pointer; color:#4e73df; font-weight:500;">
+                    <i *ngIf="isExpanded(group.file_name)" class="fas fa-chevron-up"></i>
+                    <i *ngIf="!isExpanded(group.file_name)" class="fas fa-chevron-down"></i>
+                  </span>
+
+                  <button *ngIf="!group.is_deleted && !showDeleted" class="btn btn-sm btn-outline-danger ms-2"
+                    (click)="onDelete(group.file_name)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+
+                </td>
+              </tr>
+
+              <!-- Columnas: solo si el archivo está expandido y es activo -->
+              <tr *ngIf="group.isHeader && isExpanded(group.file_name) && !group.is_deleted && !showDeleted"
+                class="table-secondary">
+                <th *ngFor="let col of getKeysForHeader(group)">{{ col }}</th>
+              </tr>
+
+              <!-- Filas de datos: solo si el archivo está expandido y es activo -->
+              <tr *ngIf="!group.isHeader && isExpanded(group.file_name) && !group.is_deleted && !showDeleted"
+                class="data-row">
+                <td *ngFor="let col of group.row_data | keyvalue">{{ col.value }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

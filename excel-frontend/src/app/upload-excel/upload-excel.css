@@ -1,0 +1,179 @@
+/* ================= Contenedor principal ================= */
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  background: #ffffff; /* fondo uniforme con la card */
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #495057;
+}
+
+/* ================= Card ================= */
+.card {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* sombra suave */
+  border: 1px solid rgba(0,0,0,0.05); /* borde sutil para distinguir la card */
+  padding: 2rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* ================= Card Header ================= */
+.card-header {
+  background-color: #ffffff;
+  color: #4e73df;
+  font-weight: 700;
+  font-size: 1.5rem;
+  border-bottom: 2px solid rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* ================= Botón Toggle ================= */
+.toggle-btn {
+  background: linear-gradient(135deg, #4e73df, #2e59d9);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  transition: all 0.2s ease-in-out;
+}
+.toggle-btn:hover {
+  background: linear-gradient(135deg, #2e59d9, #224abe);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ================= Botón estilo Excel ================= */
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.6rem 1.6rem;
+  background: linear-gradient(135deg, #1cc88a, #17a673);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+}
+.file-label:hover {
+  background: linear-gradient(135deg, #17a673, #13875f);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* ================= Botones subir/borrar ================= */
+button.btn-primary {
+  background: linear-gradient(135deg, #4e73df, #2e59d9);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+}
+button.btn-primary:hover {
+  background: linear-gradient(135deg, #2e59d9, #224abe);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+button.btn-danger {
+  background: linear-gradient(135deg, #e74a3b, #c0392b);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+}
+button.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ================= Nombre archivo ================= */
+.file-name {
+  font-style: italic;
+  color: #555;
+  font-size: 0.95rem;
+  display: block;
+  text-align: center;
+}
+.file-name.invalid {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* ================= Barra de progreso ================= */
+.progress {
+  height: 25px;
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: #dee2e6;
+}
+.progress-bar {
+  background: linear-gradient(to right, #1cc88a, #17a673);
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  transition: width 0.3s;
+}
+
+/* ================= Tabla ================= */
+.table-responsive {
+  margin-top: 1.5rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+table th {
+  background-color: #f1f3f5;
+  font-weight: 600;
+  color: #4e73df;
+  text-align: center;
+}
+tr.data-row:hover {
+  background-color: #e9ecef;
+  transition: background 0.3s;
+}
+td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* ================= Animación fadeIn ================= */
+tr.data-row {
+  opacity: 0;
+  animation: fadeIn 0.4s ease-in forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ================= Iconos toggle ================= */
+span i {
+  margin-left: 5px;
+  color: #4e73df;
+}
+
+/* ================= Hover botones ================= */
+button, .file-label {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+}
+button:hover, .file-label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 480px) {
+  button {
+    width: 100%;
+  }
+  .file-label {
+    width: 100%;
+    justify-content: center;
+  }
+}
