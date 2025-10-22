@@ -1,9 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideHttpClient } from '@angular/common/http';
-import { UploadExcel } from './app/upload-excel/upload-excel';
+import { appConfig } from './app/app.config';
+import { AppComponent } from './app/app';
 
-bootstrapApplication(UploadExcel, {
-  providers: [
-    provideHttpClient()
-  ]
-}).catch(err => console.error(err));
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));

@@ -1,3 +1,121 @@
+/* ================= Header con usuario ================= */
+.header {
+  background: linear-gradient(135deg, #4e73df 0%, #2e59d9 100%);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 1rem;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.user-info h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.user-details {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.user-role {
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.user-role.admin {
+  background-color: #ffd700;
+  color: #333;
+}
+
+.user-role.user {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.btn-logout {
+  padding: 8px 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-logout:hover {
+  background-color: white;
+  color: #4e73df;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ================= Info section para usuarios normales ================= */
+.info-section {
+  margin-bottom: 30px;
+}
+
+.info-card {
+  background: white;
+  padding: 30px;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.info-card h2 {
+  color: #4e73df;
+  margin-top: 0;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.info-card p {
+  color: #495057;
+  font-size: 1rem;
+  margin: 10px 0;
+}
+
+.info-card strong {
+  color: #1cc88a;
+  font-weight: 600;
+}
+
+/* ================= Responsive para header ================= */
+@media (max-width: 768px) {
+  .user-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .btn-logout {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .header {
+    padding: 15px 20px;
+  }
+  
+  .user-info h1 {
+    font-size: 22px;
+  }
+}
+
+
 /* ================= Contenedor principal ================= */
 .container {
   min-height: 100vh;

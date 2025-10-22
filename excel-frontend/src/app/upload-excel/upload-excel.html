@@ -1,100 +1,138 @@
-<div class="container py-5">
-  <div class="card shadow mx-auto" style="max-width: 900px; border-radius: 1rem;">
+<!-- Header con información del usuario -->
+<header class="header" @fadeIn>
+  <div class="user-info">
+    <h1>📊 Excel Upload App</h1>
+    <div class="user-details">
+      <span class="user-name">👤 {{ currentUser?.full_name }}</span>
+      <span class="user-role" [class.admin]="isAdmin" [class.user]="!isAdmin">
+        {{ isAdmin ? '🔑 Administrador' : '👥 Usuario' }}
+      </span>
+      <button class="btn-logout" (click)="logout()">
+        🚪 Cerrar Sesión
+      </button>
+    </div>
+  </div>
+</header>
 
-    <!-- Header de Card -->
-    <div class="card-header text-center bg-light text-primary fw-bold fs-4 border-0">
-      Subir Excel
+<!-- Mensaje para usuarios normales -->
+<div class="info-section" *ngIf="!isAdmin" @fadeIn>
+  <div class="info-card">
+    <h2>👋 Bienvenido, {{ currentUser?.full_name }}</h2>
+    <p>Tu rol es: <strong>Usuario</strong></p>
+    <p>📋 Puedes visualizar los datos de los archivos Excel cargados por los administradores.</p>
+  </div>
+</div>
+
+<!-- Contenedor principal -->
+<div class="container" @fadeIn>
+  <div class="card">
+    
+    <!-- Header de la card con botón toggle -->
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>📄 Gestión de Archivos Excel</span>
+      <button class="toggle-btn" (click)="toggleShowDeleted()">
+        {{ showDeleted ? 'Ocultar eliminados' : 'Mostrar eliminados' }}
+      </button>
     </div>
 
-    <div class="card-body">
-
-      <!-- Toggle mostrar/eliminados -->
-      <div class="text-center mb-4">
-        <button class="btn btn-outline-primary toggle-btn" (click)="toggleShowDeleted()">
-          {{ showDeleted ? '🔹 Mostrar solo activos' : '🗑️ Mostrar eliminados' }}
-        </button>
-      </div>
-
-      <!-- Selección de archivo -->
-      <div class="d-flex justify-content-center mb-3">
-        <label class="btn btn-success d-flex align-items-center gap-2 file-label" for="fileInput">
-          <i class="fas fa-file-excel"></i> Seleccionar archivo
+    <!-- Sección de subida (solo admin) -->
+    <div *ngIf="isAdmin" class="mb-4">
+      <div class="d-flex flex-column gap-3 align-items-center">
+        
+        <!-- Botón para seleccionar archivo -->
+        <input
+          type="file"
+          id="fileInput"
+          (change)="onFileSelected($event)"
+          accept=".xlsx, .xls"
+          style="display: none;"
+        />
+        <label for="fileInput" class="file-label">
+          📂 Seleccionar archivo Excel
         </label>
-        <input type="file" id="fileInput" class="d-none" (change)="onFileSelected($event)" />
-      </div>
 
-      <!-- Nombre archivo -->
-      <div class="text-center mb-3">
-        <span class="file-name fst-italic" [ngClass]="{'text-danger fw-bold': !selectedFile}">
-          {{ selectedFile?.name || 'Sin archivos seleccionados' }}
-        </span>
-      </div>
+        <!-- Nombre del archivo seleccionado -->
+        <div *ngIf="selectedFile" class="file-name">
+          Archivo: <strong>{{ selectedFile.name }}</strong>
+        </div>
 
-      <!-- Botones subir/borrar -->
-      <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
-        <button class="btn btn-primary d-flex align-items-center gap-2" (click)="onUpload()">
-          <i class="fas fa-upload"></i> Subir
+        <!-- Botón para subir -->
+        <button
+          class="btn btn-primary"
+          (click)="onUpload()"
+          [disabled]="!selectedFile || progress >= 0"
+        >
+          📤 Subir archivo
         </button>
-        <button *ngIf="selectedFile" class="btn btn-danger d-flex align-items-center gap-2" (click)="selectedFile=null">
-          <i class="fas fa-trash-alt"></i> Borrar
-        </button>
-      </div>
 
-      <!-- Barra de progreso -->
-
-      <div *ngIf="progress >= 0" class="progress mb-3" [@fadeOut]>
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" [style.width.%]="progress">
-          {{progress}}%
+        <!-- Barra de progreso -->
+        <div *ngIf="progress >= 0" class="progress w-100" @fadeIn>
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [style.width.%]="progress"
+            [attr.aria-valuenow]="progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            {{ progress }}%
+          </div>
         </div>
       </div>
-
-
-      <p class="text-center text-success">{{message}}</p>
-
-      <!-- Tabla de Excel -->
-      <div *ngIf="excelData.length > 0" class="table-responsive mt-4">
-        <h5 class="mb-3 text-secondary">Contenido de Excel</h5>
-        <table class="table table-bordered table-hover align-middle">
-          <tbody>
-            <ng-container *ngFor="let group of excelData">
-
-              <!-- Header de archivo -->
-              <tr *ngIf="group.isHeader" class="table-light">
-                <td [attr.colspan]="group.colspan" class="text-center fw-bold">
-
-                  <!-- Nombre del archivo siempre visible -->
-                  {{ group.file_name }}
-
-                  <!-- Mostrar toggle y borrar solo si el archivo NO está eliminado -->
-                  <span *ngIf="!group.is_deleted && !showDeleted" (click)="toggleFile(group.file_name)"
-                    style="cursor:pointer; color:#4e73df; font-weight:500;">
-                    <i *ngIf="isExpanded(group.file_name)" class="fas fa-chevron-up"></i>
-                    <i *ngIf="!isExpanded(group.file_name)" class="fas fa-chevron-down"></i>
-                  </span>
-
-                  <button *ngIf="!group.is_deleted && !showDeleted" class="btn btn-sm btn-outline-danger ms-2"
-                    (click)="onDelete(group.file_name)">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-
-                </td>
-              </tr>
-
-              <!-- Columnas: solo si el archivo está expandido y es activo -->
-              <tr *ngIf="group.isHeader && isExpanded(group.file_name) && !group.is_deleted && !showDeleted"
-                class="table-secondary">
-                <th *ngFor="let col of getKeysForHeader(group)">{{ col }}</th>
-              </tr>
-
-              <!-- Filas de datos: solo si el archivo está expandido y es activo -->
-              <tr *ngIf="!group.isHeader && isExpanded(group.file_name) && !group.is_deleted && !showDeleted"
-                class="data-row">
-                <td *ngFor="let col of group.row_data | keyvalue">{{ col.value }}</td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
     </div>
+
+    <!-- Tabla de datos -->
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered">
+        <tbody>
+          <ng-container *ngFor="let row of excelData">
+            
+            <!-- Fila de encabezado por archivo -->
+            <tr *ngIf="row.isHeader" [class.table-danger]="row.is_deleted">
+              <td [attr.colspan]="row.colspan" style="text-align: center; font-weight: bold; cursor: pointer;" (click)="toggleFile(row.file_name)">
+                <span style="font-size: 1.1rem;">
+                  {{ row.file_name }}
+                  <i [class]="isExpanded(row.file_name) ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"></i>
+                </span>
+                
+                <!-- Botón borrar (solo admin y si no está eliminado) -->
+                <button
+                  *ngIf="!row.is_deleted && isAdmin"
+                  class="btn btn-danger btn-sm ms-2"
+                  (click)="onDelete(row.file_name); $event.stopPropagation()"
+                  style="margin-left: 15px;"
+                >
+                  🗑️ Borrar
+                </button>
+                
+                <!-- Badge de eliminado -->
+                <span *ngIf="row.is_deleted" style="color: red; margin-left: 10px; font-style: italic;">
+                  (ELIMINADO)
+                </span>
+              </td>
+            </tr>
+
+            <!-- Fila de nombres de columnas -->
+            <tr *ngIf="row.isHeader && isExpanded(row.file_name)" class="table-secondary">
+              <th *ngFor="let key of getKeysForHeader(row)">{{ key }}</th>
+            </tr>
+
+            <!-- Filas de datos -->
+            <tr
+              *ngIf="!row.isHeader && isExpanded(row.file_name)"
+              class="data-row"
+              [class.table-danger]="row.is_deleted"
+              @fadeIn
+            >
+              <td *ngFor="let key of getKeysForHeader({ file_name: row.file_name })">
+                {{ row.row_data[key] }}
+              </td>
+            </tr>
+
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>
